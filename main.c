@@ -34,16 +34,16 @@ data** table_init(){
     for (int i = 0; i < TABLE; ++i) {
         hash_table[i]=(data*) malloc(sizeof(data));
         hash_table[i]->next = NULL;
-        hash_table[i]->webpage[0] = '/0';
-        hash_table[i]->password[0] = '/0';
-        hash_table[i]->username[0] = '/0';
+        hash_table[i]->webpage[0] = '\0';
+        hash_table[i]->password[0] = '\0';
+        hash_table[i]->username[0] = '\0';
     }
     //data **hash_table= calloc(TABLE, sizeof(data*));
     return hash_table;
 }
 
 void new_data(data **head, char *webpage, char *username, char *password){
-    data *newdata= malloc(sizeof(data*));
+    data *newdata;
     strcpy(newdata->webpage, webpage);
     strcpy(newdata->username, username);
     strcpy(newdata->password, password);
@@ -58,7 +58,6 @@ void new_data(data **head, char *webpage, char *username, char *password){
         }
         current->next=newdata;
     }
-    free(newdata);
 }
 
 unsigned int hash_function(char *webpage){
@@ -75,11 +74,10 @@ unsigned int hash_function(char *webpage){
 void into_table(data** hash_table, char *webpage, char *username, char *password){
     unsigned int index= hash_function(webpage);
     if(hash_table[index]==NULL){
-        hash_table[index]= malloc(sizeof(data*));
+        hash_table[index];
         data *head=NULL;
         new_data(&head, webpage, username, password);
         hash_table[index]=head;
-        free(head);
     } else {
         data *head =hash_table[index];
         new_data(&head, webpage, username, password);
@@ -87,7 +85,7 @@ void into_table(data** hash_table, char *webpage, char *username, char *password
     }
 }
 void print_table(data **hash_table){
-    data *head = malloc(sizeof(data*));
+    data *head;
     for (int i = 0; i < TABLE; ++i) {
         head =hash_table[i];
         if(hash_table[i]!=NULL){
@@ -99,11 +97,11 @@ void print_table(data **hash_table){
         }
         printf("\n");
     }
-    free(head);
 }
 
+
 void write_file(data **hash_table){
-    data *head = malloc(sizeof(data*));
+    data *head;
     for (int i = 0; i < TABLE; ++i) {
         head =hash_table[i];
         if(hash_table[i]->webpage!=NULL){
@@ -114,7 +112,7 @@ void write_file(data **hash_table){
             }
         }
     }
-    free(head);
+
 }
 
 void search(char *webpage, data **hash_table){
@@ -123,7 +121,7 @@ void search(char *webpage, data **hash_table){
         return;
     }
     unsigned int index= hash_function(webpage);
-    data *head= malloc(sizeof(data*));
+    data *head;
     head=hash_table[index];
     while(head!=NULL){
         if(strncmp(head->webpage, webpage, MAX_LENGTH_WEBPAGE)==0) {
@@ -133,15 +131,12 @@ void search(char *webpage, data **hash_table){
         head=head->next;
     }
     printf("Not in the table\n");
-    free(head);
 }
 
 void delete(char *webpage, data** hash_table){
     unsigned int index = hash_function(webpage);
-    data* temporary_before= malloc(sizeof (data*));
-    data* temporary= malloc(sizeof (data*));
-    temporary_before=NULL;
-    temporary=hash_table[index];
+    data *temporary_before=NULL;
+    data *temporary=hash_table[index];
     while(temporary!=NULL&& strncmp(webpage, temporary->webpage, MAX_LENGTH_WEBPAGE)==0) {
         temporary_before = temporary;
         temporary=temporary->next;
@@ -153,8 +148,6 @@ void delete(char *webpage, data** hash_table){
     }else{
         temporary_before->next=temporary->next;
     }
-    free(temporary);
-    free(temporary_before);
 }
 
 void free_list(data** hash_table){
