@@ -30,9 +30,13 @@ void file_close(){
 }
 
 data** table_init(){
-    data **hash_table= malloc(sizeof(data*)*TABLE);
+    data **hash_table= (data**)malloc(sizeof(data*)*TABLE);
     for (int i = 0; i < TABLE; ++i) {
-        hash_table[i]=NULL;
+        hash_table[i]=(data*) malloc(sizeof(data));
+        hash_table[i]->next = NULL;
+        hash_table[i]->webpage[0] = '/0';
+        hash_table[i]->password[0] = '/0';
+        hash_table[i]->username[0] = '/0';
     }
     //data **hash_table= calloc(TABLE, sizeof(data*));
     return hash_table;
