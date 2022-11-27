@@ -68,20 +68,7 @@ void new_data(data** hash_table, char *webpage, char *username, char *password){
     current->next=newdata;
 }
 
-void into_table(data** hash_table, char *webpage, char *username, char *password){
-    unsigned int index= hash_function(webpage);
-    if(hash_table[index]==NULL){
-        hash_table[index]= malloc(sizeof(data*));
-        data *head=NULL;
-        new_data(&head, webpage, username, password);
-        hash_table[index]=head;
-        free(head);
-    } else {
-        data *head =hash_table[index];
-        new_data(&head, webpage, username, password);
-        hash_table[index]=head;
-    }
-}
+
 void print_table(data **hash_table){
     data *head = malloc(sizeof(data*));
     for (int i = 0; i < TABLE; ++i) {
@@ -119,8 +106,7 @@ void search(char *webpage, data **hash_table){
         return;
     }
     unsigned int index= hash_function(webpage);
-    data *head= malloc(sizeof(data*));
-    head=hash_table[index];
+    data *head =hash_table[index];
     while(head!=NULL){
         if(strncmp(head->webpage, webpage, MAX_LENGTH_WEBPAGE)==0) {
             printf("%s %s %s\n", head->webpage, head->username, head->password);
@@ -129,16 +115,15 @@ void search(char *webpage, data **hash_table){
         head=head->next;
     }
     printf("Not in the table\n");
-    free(head);
 }
 
 void delete(char *webpage, data** hash_table){
     unsigned int index = hash_function(webpage);
-    data* temporary_before= malloc(sizeof (data*));
-    data* temporary= malloc(sizeof (data*));
+    data* temporary_before;
+    data* temporary;
     temporary_before=NULL;
     temporary=hash_table[index];
-    while(temporary!=NULL&& strncmp(webpage, temporary->webpage, MAX_LENGTH_WEBPAGE)==0) {
+    while(temporary!=NULL && strncmp(webpage, temporary->webpage, MAX_LENGTH_WEBPAGE)==0) {
         temporary_before = temporary;
         temporary=temporary->next;
     }
@@ -149,8 +134,6 @@ void delete(char *webpage, data** hash_table){
     }else{
         temporary_before->next=temporary->next;
     }
-    free(temporary);
-    free(temporary_before);
 }
 
 void free_list(data** hash_table){
@@ -170,14 +153,14 @@ int main(){
     char *webpage1="1qwer";
     char *username1="2qwer";
     char *password1="3qwer";
-    into_table(&*hash_table, webpage1, username1, password1);
-    print_table(&*hash_table);
-    search(webpage1, &*hash_table);
-    print_table(&*hash_table);
-    write_file(&*hash_table);
-    delete(webpage1, &*hash_table);
-    print_table(&*hash_table);
-    free_list(&*hash_table);
+    new_data(hash_table, webpage1, username1, password1);
+    print_table(hash_table);
+    search(webpage1, hash_table);
+    print_table(hash_table);
+    write_file(hash_table);
+    delete(webpage1, hash_table);
+    print_table(hash_table);
+    free_list(hash_table);
     file_close();
 }
 //TODO a keresés ne printf et returnoljon mert másra is kell
