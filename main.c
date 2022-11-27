@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "debugmalloc.h"
+//#include "debugmalloc.h"
 
 #define TABLE 57
 #define MAX_LENGTH_WEBPAGE 256
@@ -148,8 +148,8 @@ void free_list(data** hash_table){
 }
 int main(){
     file_open();
-    data *hash_table[TABLE];
-    table_init();
+
+    data** hash_table = table_init();
     char *webpage1="1qwer";
     char *username1="2qwer";
     char *password1="3qwer";
